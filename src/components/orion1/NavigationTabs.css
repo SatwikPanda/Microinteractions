@@ -1,0 +1,7 @@
+
+
+.test {
+    /*clip-path: polygon(0 0, 49% 0, 50% 39%, 0 39%);*/
+    width: 2rem;
+    overflow: hidden;
+}
