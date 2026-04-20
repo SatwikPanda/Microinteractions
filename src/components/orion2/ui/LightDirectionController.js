@@ -5,6 +5,14 @@ import gsap from "gsap";
 
 import { IoSunny } from "react-icons/io5";
 
+/*
+Notes on how the animation works so first the element is hidden with opacity - 0 and then the layout calculations are done
+Now that Layout calculations are then it is set using gsap and then opacity - 1
+
+Now the main heros for this animations are shrink-0 or flex-none
+
+*/
+
 export default function LightDirectionController() {
   const position = useLightStore((state) => state.position);
   const setPosition = useLightStore((state) => state.setPosition);
@@ -43,12 +51,13 @@ export default function LightDirectionController() {
 
     gsap.set(container, {
       width: collapsedWidth.current,
+      opacity: 1,
     });
 
     gsap.set(directionalText, {
       opacity: 0,
       x: -15,
-      filter: "blur(8px)"
+      filter: "blur(8px)",
     });
 
     tl.current = gsap.timeline({ paused: true });
@@ -87,7 +96,7 @@ export default function LightDirectionController() {
     <div
       ref={containerRef}
       onClick={handleOpen}
-      className={`bg-black px-2 py-2 rounded-full overflow-hidden w-[50px]. hover:bg-white/10 transition-all duration-250 hover:text-white cursor-pointer
+      className={`bg-black px-2 py-2 rounded-full overflow-hidden w-[50px]. hover:bg-white/10 transition-all duration-250 hover:text-white cursor-pointer opacity-0
       ${open ? "text-white" : "text-neutral-600"}
       `}
     >
