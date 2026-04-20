@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react"
 import * as T from "three";
-import { append } from "three/tsl";
 import createCube from "./cube/cube";
+import createAmbientLight from "./lights/ambientlight/ambientLight";
+import createDirectionalLight from "./lights/directional/directionalLight";
 
 
 export default function ThreeScene() {
@@ -10,9 +11,9 @@ export default function ThreeScene() {
     if (typeof window !== 'undefined') {
       const container = containerRef.current;
       
-      const width = container.clientWidth;
-      const height = container.clientHeight;
-      const aspect = width / height;
+      let width = container.clientWidth;
+      let height = container.clientHeight;
+      let aspect = width / height;
       
       const fov = 75;
       const near = 0.1;
@@ -27,11 +28,18 @@ export default function ThreeScene() {
         alpha: true,
         depth: true,
       });
+      renderer.setPixelRatio(window.devicePixelRatio);
       renderer.setSize(width, height);
       container.appendChild(renderer.domElement);
       
       const cube = createCube();
       scene.add(cube);
+      
+      const ambientLight = createAmbientLight();
+      scene.add(ambientLight);
+      
+      const directionalLight = createDirectionalLight();
+      scene.add(directionalLight)
       
       const objects = [cube];
       
@@ -47,10 +55,25 @@ export default function ThreeScene() {
       
       animate();
       
+      const handleResize = () => {
+        width = container.clientWidth;
+        height = container.clientHeight;
+        
+        renderer.setSize(width, height);
+        
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+      }
+      
+      window.addEventListener("resize", handleResize);
+      
       return () => {
+        window.removeEventListener("resize", handleResize);
         container.removeChild(renderer.domElement);
-        geometry.dispose();
-        material.dispose();
+        
+        cube.geometry?.dispose?.();
+        cube.material?.dispose?.();
+        
         renderer.dispose();
       }
     }
